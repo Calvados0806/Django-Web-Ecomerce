@@ -49,6 +49,6 @@
   </table>
   <p class="text-right">
     <a href="{% url "shop:ProductList"%}" class="btn">Continue shopping</a>
-    <a href="#">Confirm order</a>
+    <a href="{% url "orders:OrderCreate" %}" class="btn">Confirm order</a>
   </p>
 {% endblock %}
