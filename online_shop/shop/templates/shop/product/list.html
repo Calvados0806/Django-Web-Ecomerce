@@ -18,7 +18,23 @@
     </ul>
   </div>
   <div id="main" class="product_list col-sm-9">
-    <h1>{% if category %}{{ category.name }}{% else %}Products{% endif %}</h1>
+    <h1>{% if category %}{{ category.name }}{% else %}All Products{% endif %}</h1>
+    <table class="table">
+        <tbody>
+            <tr>
+                {% with order_by=request.GET.order_by reverse=request.GET.reverse %}
+                <th><a href="{{ category.get_absolute_url }}?order_by=name{% if order_by == 'name' and reverse != '1' %}&amp;reverse=1{% endif %}">
+                            Name {% if order_by == 'name' and reverse != '1' %}&uarr;{% elif order_by == 'name' and reverse == '1' %}&darr;{% endif %}</a></th>
+                <th><a href="{{ category.get_absolute_url }}?order_by=price{% if order_by == 'price' and reverse != '1' %}&amp;reverse=1{% endif %}">
+                            Price {% if order_by == 'price' and reverse != '1' %}&uarr;{% elif order_by == 'price' and reverse == '1' %}&darr;{% endif %}</a></th>
+                <th><a href="{{ category.get_absolute_url }}?order_by=created{% if order_by == 'created' and reverse != '1' %}&amp;reverse=1{% endif %}">
+                            Created {% if order_by == 'created' and reverse != '1' %}&uarr;{% elif order_by == 'created' and reverse == '1' %}&darr;{% endif %}</a></th>
+                <th><a href="{{ category.get_absolute_url }}?order_by=updated{% if order_by == 'updated' and reverse != '1' %}&amp;reverse=1{% endif %}">
+                            Updated {% if order_by == 'updated' and reverse != '1' %}&uarr;{% elif order_by == 'updated' and reverse == '1' %}&darr;{% endif %}</a></th>
+                {% endwith %}
+            </tr>
+        </tbody>
+    </table>
     <div class="items row">
       {% for product in products %}
         <div class="item col-sm-4">

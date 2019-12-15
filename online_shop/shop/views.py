@@ -7,9 +7,19 @@ def ProductList(request, category_slug=None):
     category = None
     categories = Category.objects.all()
     products = Product.objects.filter(available=True)
+
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
         products = products.filter(category=category)
+
+    order_by = request.GET.get("order_by", "")
+    if order_by in ("name", "price", "created", "updated"):
+        products = products.order_by(order_by)
+        if request.GET.get("reverse", "") == '1':
+            products = products.reverse()
+    else:
+        products = products.order_by("created").reverse()
+
     return render(request, 'shop/product/list.html', {
         'category': category,
         'categories': categories,
