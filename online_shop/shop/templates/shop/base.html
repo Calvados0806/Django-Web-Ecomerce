@@ -16,7 +16,18 @@
     </div>
     <div class="top-bl">
       <div class="container">
-        <div class="cart">Your cart is empty</div>
+          <div class="cart">
+              {% with total_items=cart|length %}
+                  {% if cart|length > 0 %}
+                      Your cart:
+                      <a href="{% url "cart:CartDetail" %}">
+                          {{ total_items }} prods. {{ cart.get_total_price }} $.
+                      </a>
+                   {% else %}
+                        Cart is empty
+                  {% endif %}
+              {% endwith %}
+          </div>
       </div>
     </div>
   </section>
