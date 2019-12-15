@@ -12,6 +12,9 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('shop:ProductListByCategory', args=[self.slug])
+
 
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', verbose_name="Category", on_delete=models.PROTECT)
@@ -27,10 +30,12 @@ class Product(models.Model):
 
     class Meta:
         ordering = ['name']
-        abstract =True
         index_together = [
             ['id', 'slug']
         ]
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+          return reverse('shop:ProductDetail', args=[self.id, self.slug]
