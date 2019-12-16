@@ -40,3 +40,16 @@ class Product(models.Model):
 
     def get_absolute_url(self):
           return reverse('shop:ProductDetail', args=[self.id, self.slug])
+
+class Comment(models.Model):
+    product = models.ForeignKey(Product, related_name="comments", verbose_name="product", on_delete=models.CASCADE)
+    username = models.CharField(max_length=50, db_index=True, verbose_name="username")
+    text = models.TextField(blank=False, verbose_name="text")
+
+    class Meta:
+        ordering = ['username']
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'
+
+    def __str__(self):
+        return "%s: %s" % (self.username, self.text)

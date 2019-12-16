@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404, render_to_response
 from django.template.context_processors import csrf
-from .models import Category, Product
+from .models import Category, Product, Comment
 from cart.forms import CartAddProductForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from .forms import CommentCreateForm
 
 def ProductList(request, category_slug=None):
     category = None
@@ -39,6 +40,17 @@ def ProductList(request, category_slug=None):
 def ProductDetail(request, id, slug):
     product = get_object_or_404(Product, id=id, slug=slug, available=True)
     cart_product_form = CartAddProductForm()
-    context = {'product': product, 'cart_product_form': cart_product_form}
+    form = CommentCreateForm()
+    context = {
+        'product': product,
+        'cart_product_form': cart_product_form,
+        'form': form,
+        'comments': Comment.objects.filter(product=product)
+    }
     context.update(csrf(request))
+    if request.method == 'POST':
+        form = CommentCreateForm(request.POST)
+        if form.is_valid():
+            Comment.objects.create(product=product, username=form.data['username'], text=form.data['text'])
+            return render_to_response('shop/product/detail.html', context)
     return render_to_response('shop/product/detail.html', context)
