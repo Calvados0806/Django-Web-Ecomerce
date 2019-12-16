@@ -18,7 +18,7 @@
       <div class="container">
           <div class="cart">
               {% with total_items=cart|length %}
-                  {% if cart|length > 0 %}
+                  {% if total_items > 0 %}
                       Your cart:
                       <a href="{% url "cart:CartDetail" %}">
                           {{ total_items }} prods. {{ cart.get_total_price }} $.
@@ -27,6 +27,11 @@
                         Cart is empty
                   {% endif %}
               {% endwith %}
+          </div>
+          <div class="row">
+              <ul class="nav nav-tabs" role="tablist">
+                  <li role="presentation" {% if '/contact-admin' in request.path %} class="active" {% endif %}><a href='{% url "contact_admin" %}'>Contact administration</a></li>
+              </ul>
           </div>
       </div>
     </div>
