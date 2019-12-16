@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, render_to_response
 from django.template.context_processors import csrf
 from .models import Category, Product
 from cart.forms import CartAddProductForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def ProductList(request, category_slug=None):
     category = None
@@ -19,6 +20,15 @@ def ProductList(request, category_slug=None):
             products = products.reverse()
     else:
         products = products.order_by("created").reverse()
+
+    paginator = Paginator(products, 3)
+    page = request.GET.get("page")
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
 
     return render(request, 'shop/product/list.html', {
         'category': category,
